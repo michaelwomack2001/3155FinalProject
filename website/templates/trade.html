@@ -1,0 +1,18 @@
+{% extends 'layout.html'%}
+{%block title %}Trade{%endblock%}
+{%block body%} 
+<h1 align="center">Current Trades</h1>
+<ul class="list-group list-group-flush" id="trades">
+  {% for trade in trades %}
+  <div class = "container">
+    <h1>Posted by: {{trade.user_name}}</h1>
+    <p>{{ trade.item_name }}</p>
+    <p>{{ trade.item_type }}</p>
+    <p>{{ trade.size }}</p>
+    <p>{{ trade.desc }}</p>
+  </li>
+  </div>
+  <li class="list-group-item">
+
+  {% endfor %}
+{%endblock%}
