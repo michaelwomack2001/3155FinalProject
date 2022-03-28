@@ -34,6 +34,10 @@ def delete_note():
 def about():
     return render_template("about.html", user=current_user)
 
+@views.route('/search')
+def search():
+    return render_template("search.html", user=current_user)
+
 @views.route('/contact')
 def contact():
     return render_template("contact.html", user=current_user)
