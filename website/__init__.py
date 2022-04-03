@@ -7,9 +7,11 @@ db = SQLAlchemy()
 DB_NAME = "database.db"
 
 
+# Good use of the application factory pattern here
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'hjshjhdjah kjshkjdhjs'
+    # If you're using sqlite for local development, that's fine, but I would add the database.db to your .gitignore
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     db.init_app(app)
 

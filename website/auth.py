@@ -37,6 +37,9 @@ def logout():
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
+    # Just a style thing, but if you have your return render_template up here
+    # then you don't need to have all your logic indented under request.method == 'POST'
+    # Using early returns can start to clean up your code nicely
     if request.method == 'POST':
         email = request.form.get('email')
         first_name = request.form.get('user_name')
