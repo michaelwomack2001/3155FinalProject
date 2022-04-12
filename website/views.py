@@ -4,10 +4,10 @@ from sqlalchemy import false, true
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from website.dbfunc import get_active_trades, get_num_trades
-from .models import Note
-from .models import User
-from .models import Trades
-from . import db
+from src.models import Notes
+from src.models import Users
+from src.models import Trades
+from src.models import db
 import json
 
 views = Blueprint('views', __name__)
@@ -22,7 +22,7 @@ def home():
 def delete_note():
     note = json.loads(request.data)
     noteId = note['noteId']
-    note = Note.query.get(noteId)
+    note = Notes.query.get(noteId)
     if note:
         if note.user_id == current_user.id:
             db.session.delete(note)
@@ -51,22 +51,13 @@ def trade():
         if len(note) < 1:
             flash('Note is too short!', category='error')
         else:
-            new_note = Note(data=note, user_id=current_user.id)
+            new_note = Notes(data=note, user_id=current_user.id)
             db.session.add(new_note)
             db.session.commit()
             flash('Note added!', category='success')
             
     return render_template("trade.html", user=current_user, trades= Trades.query.all())
 
-@views.route('/buysell')
-@login_required
-def buysell():
-    return render_template("BuySell.html", user=current_user)
-
-@views.route('/marketplace')
-@login_required
-def marketplace():
-    return render_template("marketplace.html", user=current_user)
 
 @views.route('/userpage', methods=['GET', 'POST'])
 @login_required
