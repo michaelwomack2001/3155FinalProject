@@ -31,13 +31,13 @@ class Wishlist(db.Model):
 
 
 class Users(db.Model, UserMixin):
-    id = db.Column(db.String, db.ForeignKey('users.user_name'))
     email = db.Column(db.String(150), unique=True)
     user_password = db.Column(db.String(1000))
     user_name = db.Column(db.String, primary_key = True)
     shipping_address = db.column(db.String)
-    user_id = db.relationship('Users')
     notes = db.relationship('Notes') #relates the notes to each user
     trades= db.relationship('Trades') 
     iso = db.relationship('Wishlist')
     reputation = db.Column(db.Float(100.00))
+    user = db.relationship('Users')
+    id = db.Column(db.String, db.ForeignKey('users.user_name'))
