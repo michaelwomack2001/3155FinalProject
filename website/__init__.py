@@ -2,15 +2,18 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
+import os
+from dotenv import load_dotenv
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
 
+load_dotenv()
 
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'hjshjhdjahkjshkjdhjs'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:epicpassword@localhost:3306/trade_site'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_ECHO'] = True
 
