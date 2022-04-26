@@ -4,8 +4,8 @@ from flask_login import login_required, current_user
 from sqlalchemy import false, true
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from website.models import Listings, Trades
-from . import db
+from src.models import Trades
+from src.models import db
 import json
 
 #Trader Functions
