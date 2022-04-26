@@ -6,23 +6,12 @@
   <div class = "container">
     <ul>
       <li>Reputation: {{user.reputation}}</li>
-      <li>Total trades: {{total_trades}}</li>
-      <li>Active trades: {{active_trades}}</li>
     </ul>
   </div>
 </div>
 
 <!--This displays all active trades to the user-->
 <div class = "container">
-    <h1>{{user.user_name}}'s ISO/DISO </h1>
-    <ol>
-    {%for disoitems in user.diso%}
-      <li>{{disoitems.item_name}}</li>
-    {%endfor%}
-    </ol>
-    {%for isoitems in user.iso%}
-    <li>{{isoitems.item_name}}</li>
-    {%endfor%}
     <button>
       <a href = "/usersettings">
         Edit list or add items
@@ -33,98 +22,9 @@
 <!--This is the method to post trades-->
 <div class = "container">
     <h1>{{user.user_name}}'s active trade listings</h1>
-    <ul class="list-group list-group-flush" id = "trades">
-      {% for trade in user.trades %}
-      <li class="list-group-item">
-        <td>{{ trade.item_name }}</td>
-        <td>{{ trade.item_type }}</td>
-        <td>{{ trade.size }}</td>
-        <td>{{ trade.desc }}</td>
-        <button type="button" class="close" onClick="deleteTrade({{ trade.id }})">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </li>
-      {% endfor %}
-    </ul>
 </div>
 
 <div class = "container">
   <h1>Post a new trade!</h1>
-  <form method="POST">
-    <div class="form-group">
-      <label for="item_name">Name</label>
-      <input
-        type="item_name"
-        class="form-control"
-        id="item_name"
-        name="item_name"
-        placeholder="Enter Item Name as displayed on tag"
-      />
-    </div>
-    <div class="form-group">
-      <label for="item_name">Item Type: </label>
-    <select
-    type = "item_type"
-    id = "item_type"
-    name = item_type>
-      <option value=””>-----</option>
-      <option value=”Squishmallow”>Squishmallow</option>
-      <option value=”Squishmallow”>Squishmallow Clips</option>
-      <option value=”Squeezemallow”>Squeezemallow</option>
-      <option value=”Squishville”>Squishville</option>
-      <option value=”TradingCards”>Trading cards</option>
-      <option value=”Other”>Other</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="size">Size: </label>
-    <select
-    type = "item_size"
-    id = "item_size"
-    name = item_size>
-      <option value=””>-----</option>
-      <option value=”3”>3</option>
-      <option value=”5”>5</option>
-      <option value=”8”>8</option>
-      <option value=”12”>12</option>
-      <option value=”16”>16</option>
-      <option value=”20”>20</option>
-      <option value=”24>24</option>
-      <option value=”3.5”>Clip size</option>
-      <option value=”2”>Squishville size</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="tag">Is the tag still on?: </label>
-    <select
-    type = "tag"
-    id = "tag"
-    name = tag>
-      <option value=””>-----</option>
-      <option value=”True”>Yes</option>
-      <option value=”False”>No</option>
-      </select>
-    </div>  
-      <div class="form-group">
-        <label for="tag">Condtion of Item: </label>
-      <select
-      type = "condition"
-      id = "condition"
-      name = condition>
-        <option value=””>-----</option>
-        <option value=”BrandNew”>Brand new</option>
-        <option value=””>Slightly used</option>
-        <option value=”8”>Loved</option>
-        <option value=”12”>Well Loved</option>
-        <option value=”16”>Altered</option>
-        </select>
-      </div>
-    </div>
-      <textarea name="desc" id="desc" class="form-control" title="Describe item and Demands"></textarea>
-      <br />
-    <div align="center">
-        <button type="submit" class="btn btn-primary">Submit Trade</button>
-    </div>
-</form>
 </div>
 {%endblock%}
