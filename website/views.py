@@ -56,46 +56,26 @@ def trade():
             db.session.commit()
             flash('Note added!', category='success')
             
-    return render_template("trade.html", user=current_user, trades= Trades.query.all())
+    return render_template("trade.html", user=current_user)
+
+@views.route('/createtrade', methods=['GET', 'POST'])
+@login_required
+def createtrade():
+    if request.method == 'POST':
+        pass
+        '''''
+        if len() < 1:
+            pass
+        else:
+            pass
+        '''''
+    return render_template("create.html", user=current_user)
 
 
 @views.route('/userpage', methods=['GET', 'POST'])
 @login_required
 def userpage():
-    
-    if request.method == 'POST':
-        item_name = request.form.get('item_name')
-        item_size = request.form.get('item_size')
-        item_type = request.form.get('item_type')
-        has_tag = request.form.get('tag')
-        desc = request.form.get('desc')
-        condition = request.form.get('condition')
-        active = true
-        completed = false
-
-        if len(item_name) < 2:
-            flash('Email must be greater than 3 characters.', category='error')
-        elif item_size == "":
-            flash('Please Select a Item size', category='error')
-        elif item_type == "":
-            flash('Please Select a item type', category='error')
-        elif has_tag == "":
-            flash('Please Select a tag status', category='error')
-        elif len(desc) < 10:
-            flash('Description is too short', category='error')
-        elif condition == "":
-            flash('Please select a condition', category='error')
-        else:
-            active_trades = True
-            completed = False
-            new_trade = Trades(item_name=item_name, size=item_size, item_type=item_type, desc = desc, condition=condition,tag=has_tag, active_trade = active_trades, completed = completed, user_id=current_user.id)
-            db.session.add(new_trade)
-            db.session.commit()
-            flash('Trade Created!', category='success')
-            return redirect(url_for('views.userpage'))           
-    total_trades = get_num_trades(current_user)
-    active_trades = get_active_trades(current_user)
-    return render_template("userpage.html", user=current_user, total_trades =total_trades, active_trades = active_trades)
+    return render_template("userpage.html", user=current_user)
 
 @views.route('/usersettings',methods=['GET', 'POST'])
 @login_required
