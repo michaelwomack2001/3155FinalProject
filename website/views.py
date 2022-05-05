@@ -1,8 +1,10 @@
+from asyncio.windows_events import NULL
+from re import T
 from flask import Blueprint, render_template, request, flash, redirect, url_for,jsonify
 from flask_login import login_required, current_user
-from sqlalchemy import false, true
+from sqlalchemy import false, true, text
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import datetime
 from website.dbfunc import get_active_trades, get_num_trades
 from src.models import Notes
 from src.models import Users
@@ -45,37 +47,49 @@ def contact():
 @views.route('/trade', methods=['GET', 'POST'])
 @login_required
 def trade():
-    if request.method == 'POST':
-        note = request.form.get('note')
+    all_trades = Trades.query.all()
+    return render_template("trade.html", user=current_user, all_trades = all_trades)
 
-        if len(note) < 1:
-            flash('Note is too short!', category='error')
-        else:
-            new_note = Notes(data=note, user_id=current_user.id)
-            db.session.add(new_note)
-            db.session.commit()
-            flash('Note added!', category='success')
-            
-    return render_template("trade.html", user=current_user)
+@views.route('/trade/<int:trade_id>')
+def get_trade(trade_id):
+    trade = Trades.query.get(trade_id)
+    return render_template("singletrade.html", user=current_user, trade = trade)
 
 @views.route('/createtrade', methods=['GET', 'POST'])
 @login_required
 def createtrade():
     if request.method == 'POST':
-        pass
-        '''''
-        if len() < 1:
-            pass
+        item_name = request.form.get('item_name')
+        item_type = request.form.get('item_name')
+        item_desc = request.form.get('item_name')
+        item_condition = request.form.get('item_name')
+
+        if len(item_name) < 2:
+            flash('Item name is too short!')
+        elif item_type == 'select type':
+            flash('Please select a item type or other')
+        elif item_desc == NULL:
+            flash('Item description is required')
+        elif len(item_desc) < 10:
+            flash("Item description is not comprehensive enough")
+        elif item_condition == 'Select Condition':
+            flash('Please select a item condition')
         else:
-            pass
-        '''''
+            new_trade = Trades(item_name = item_name, item_type = item_type, 
+            item_desc = item_desc, active_trade = true, completed_trade = false,
+            user_name = current_user.user_name)
+            db.session.add(new_trade)
+            db.session.commit()
+            return redirect(url_for('get_trade'),new_trade)
     return render_template("create.html", user=current_user)
 
 
 @views.route('/userpage', methods=['GET', 'POST'])
 @login_required
 def userpage():
-    return render_template("userpage.html", user=current_user)
+    user_name = current_user.user_name
+    user_trades = Trades.query.get(user_name)
+    return render_template("userpage.html", user=current_user, user_trades = user_trades)
 
 @views.route('/usersettings',methods=['GET', 'POST'])
 @login_required
