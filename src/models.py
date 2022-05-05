@@ -20,7 +20,6 @@ class Trades(db.Model):
     active_trade = db.column(db.Boolean())
     item_condition = db.Column(db.String) 
     completed_trade = db.column(db.Boolean())   
-    date = db.Column(db.DateTime(timezone=True), default=func.now())
     notes = db.relationship('Notes')
     user_name = db.Column(db.String, db.ForeignKey('users.user_name'))
 
