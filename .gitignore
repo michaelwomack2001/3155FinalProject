@@ -2,4 +2,3 @@ __pycache__
 venv
 myvenv
 .env
-website/__pycache__

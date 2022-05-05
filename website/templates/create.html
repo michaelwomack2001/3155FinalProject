@@ -1,7 +1,6 @@
 {% extends 'layout.html'%}
 {%block body%} 
 {%block title %}Trade{%endblock%}
-{%block body%} 
 <div class = "container">
     <h1>Post a new trade</h1>
     <form method="POST">
@@ -41,11 +40,12 @@
         <option value="For Parts">For Parts</option>
         </select>
         </div>
-    </div>
+    
     <div class="form-group">
         <label for="file">Image: </label>
         <input type="file" accept=".png,.jpeg,.jpg,.jfif" class="form-control" name="file" id="file">
     </div>
+        <label for="desc">Describe item and potential demands</label>
         <textarea name="desc" id="desc" class="form-control" title="Describe item and potential demands"></textarea>
         <br/>
     <div align="center">
