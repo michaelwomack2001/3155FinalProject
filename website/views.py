@@ -53,6 +53,9 @@ def trade():
 @views.route('/trade/<int:trade_id>')
 def get_trade(trade_id):
     trade = Trades.query.get(trade_id)
+    if not trade:
+        # TODO: Code for if the trade ID cannot be found
+        return render_template("home.html", user=current_user)
     return render_template("singletrade.html", user=current_user, trade = trade)
 
 @views.route('/createtrade', methods=['GET', 'POST'])
@@ -60,9 +63,9 @@ def get_trade(trade_id):
 def createtrade():
     if request.method == 'POST':
         item_name = request.form.get('item_name')
-        item_type = request.form.get('item_name')
-        item_desc = request.form.get('item_name')
-        item_condition = request.form.get('item_name')
+        item_type = request.form.get('item_type')
+        item_desc = request.form.get('desc')
+        item_condition = request.form.get('condition')
 
         if len(item_name) < 2:
             flash('Item name is too short!')
@@ -76,11 +79,11 @@ def createtrade():
             flash('Please select a item condition')
         else:
             new_trade = Trades(item_name = item_name, item_type = item_type, 
-            item_desc = item_desc, active_trade = true, completed_trade = false,
+            item_desc = item_desc, active_trade = True, completed_trade = False,
             user_name = current_user.user_name)
             db.session.add(new_trade)
             db.session.commit()
-            return redirect(url_for('get_trade'),new_trade)
+            return redirect(url_for('views.get_trade',trade_id=new_trade.trade_id))
     return render_template("create.html", user=current_user)
 
 
