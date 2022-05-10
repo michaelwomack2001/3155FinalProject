@@ -3,3 +3,4 @@ venv
 myvenv
 .env
 website/__pycache__/
+images

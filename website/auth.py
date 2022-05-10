@@ -14,6 +14,7 @@ def login():
         password = request.form.get('password')
 
         user = Users.query.filter_by(email=email).first()
+        db.session.commit()
         if user:
             if check_password_hash(user.user_password, password):
                 flash('Logged in successfully!', category='success')
@@ -45,6 +46,7 @@ def sign_up():
         
         email_user = Users.query.filter_by(email=email).first()
         user_name_user = Users.query.filter_by(user_name=first_name).first()
+        db.session.commit()
         if user_name_user and email_user:
             flash('Email already exists.', category='error')
         elif len(email) < 4:

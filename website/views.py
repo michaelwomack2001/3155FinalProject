@@ -10,6 +10,7 @@ from src.models import Notes
 from src.models import Users
 from src.models import Trades
 from src.models import db
+import os
 import json
 
 views = Blueprint('views', __name__)
@@ -19,12 +20,12 @@ views = Blueprint('views', __name__)
 def home():
     return render_template("home.html", user=current_user)
 
-
 @views.route('/delete-note', methods=['POST'])
 def delete_note():
     note = json.loads(request.data)
     noteId = note['noteId']
     note = Notes.query.get(noteId)
+    db.session.commit()
     if note:
         if note.user_id == current_user.id:
             db.session.delete(note)
@@ -48,13 +49,16 @@ def contact():
 @login_required
 def trade():
     all_trades = Trades.query.all()
+    db.session.commit()
     return render_template("trade.html", user=current_user, all_trades = all_trades)
 
 @views.route('/trade/<int:trade_id>')
 def get_trade(trade_id):
     trade = Trades.query.get(trade_id)
+    db.session.commit()
     if not trade:
-        # TODO: Code for if the trade ID cannot be found
+        # TODO: Code for if the trade ID cannot be found. Currently just sends user back to homepage
+        flash("ERROR: Could not find trade with ID " + str(trade_id) + ", redirected back home.")
         return render_template("home.html", user=current_user)
     return render_template("singletrade.html", user=current_user, trade = trade)
 
@@ -66,23 +70,34 @@ def createtrade():
         item_type = request.form.get('item_type')
         item_desc = request.form.get('desc')
         item_condition = request.form.get('condition')
+        file = request.files['file']
+
+        conds = ['New','Used','Refurbished','For Parts']
+        types = ['Video Games','Collectibles','Small Electronics','Computers','Other']
 
         if len(item_name) < 2:
             flash('Item name is too short!')
-        elif item_type == 'select type':
+        elif item_type not in types:
             flash('Please select a item type or other')
         elif item_desc == NULL:
             flash('Item description is required')
         elif len(item_desc) < 10:
             flash("Item description is not comprehensive enough")
-        elif item_condition == 'Select Condition':
+        elif item_condition not in conds:
             flash('Please select a item condition')
         else:
             new_trade = Trades(item_name = item_name, item_type = item_type, 
-            item_desc = item_desc, active_trade = True, completed_trade = False,
-            user_name = current_user.user_name)
+            item_desc = item_desc, item_condition = item_condition, active_trade = True, 
+            completed_trade = False, user_name = current_user.user_name)
             db.session.add(new_trade)
             db.session.commit()
+            if file:
+                print("got here woooo")
+                file = request.files['file']
+                if not os.path.exists('/website/static/images'):
+                    os.makedirs('/website/static/images')
+                filename = str(new_trade.trade_id) + ".png"
+                file.save(os.path.join("/website/static/images/", filename))
             return redirect(url_for('views.get_trade',trade_id=new_trade.trade_id))
     return render_template("create.html", user=current_user)
 
@@ -92,9 +107,13 @@ def createtrade():
 def userpage():
     user_name = current_user.user_name
     user_trades = Trades.query.get(user_name)
+    db.session.commit()
     return render_template("userpage.html", user=current_user, user_trades = user_trades)
 
 @views.route('/usersettings',methods=['GET', 'POST'])
 @login_required
 def usersettings():
     return render_template("usersettings.html", user=current_user)
+
+def processimg():
+    return
