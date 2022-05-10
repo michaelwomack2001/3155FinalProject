@@ -6,11 +6,12 @@
   {% for trade in all_trades %}
   <div class = "container">
     <li class="list-group-item"></li>
-    <h1>Posted by: {{ trade.user_name }}</h1>
-    <p>{{ trade.item_name }}</p>
+    <img src="{{url_for('static', filename='unavailable.png')}}" style="float:right; max-height:200px;"/>
+    <h1><a href="trade/{{ trade.trade_id }}">{{ trade.item_name }}</a></h1>
+    <p>Posted by: {{ trade.user_name }}</p>
     <p>{{ trade.item_type }}</p>
-    <p>{{ trade.size }}</p>
-    <p>{{ trade.desc }}</p>
+    <p>{{ trade.item_condition }}</p>
+    <p>{{ trade.trade_date }}</p>
   </li>
   </div>
 

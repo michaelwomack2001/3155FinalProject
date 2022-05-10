@@ -31,6 +31,10 @@ def create_app():
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
+    
+    @app.teardown_appcontext
+    def shutdown_session(exception=None):
+        db.session.remove()
 
     @login_manager.user_loader
     def load_user(user_name):
