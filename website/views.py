@@ -10,6 +10,7 @@ from src.models import Notes
 from src.models import Users
 from src.models import Trades
 from src.models import db
+from better_profanity import profanity
 import json
 
 views = Blueprint('views', __name__)
@@ -48,6 +49,7 @@ def contact():
 @login_required
 def trade():
     all_trades = Trades.query.all()
+
     return render_template("trade.html", user=current_user, all_trades = all_trades)
 
 @views.route('/trade/<int:trade_id>')
@@ -56,6 +58,20 @@ def get_trade(trade_id):
     if not trade:
         # TODO: Code for if the trade ID cannot be found
         return render_template("home.html", user=current_user)
+
+    if request.method == 'POST':
+        note_data = request.form.get("data")
+        note_data = profanity.censor(note_data)
+
+        if len(note_data) < 10:
+            flash('please make a longer note')
+        else:
+            new_note = Notes(note_data = note_data, user_name = current_user.user_name,
+            trade_id = trade_id)
+            db.session.add(new_note)
+            db.session.commit()
+            return redirect(url_for('views.get_trade',trade_id=trade_id))
+
     return render_template("singletrade.html", user=current_user, trade = trade)
 
 @views.route('/createtrade', methods=['GET', 'POST'])
@@ -91,7 +107,7 @@ def createtrade():
 @login_required
 def userpage():
     user_name = current_user.user_name
-    user_trades = Trades.query.get(user_name)
+    user_trades = Trades.query.get(current_user.user_name)
     return render_template("userpage.html", user=current_user, user_trades = user_trades)
 
 @views.route('/usersettings',methods=['GET', 'POST'])

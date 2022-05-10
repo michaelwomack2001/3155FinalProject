@@ -10,18 +10,15 @@
   </div>
 </div>
 
-<!--This displays all active trades to the user-->
-<div class = "container">
-    <button>
-      <a href = "/usersettings">
-        Edit list or add items
-      </a>
-    </button>
-  </div>
-
 <!--This is the method to post trades-->
 <div class = "container">
     <h1>{{user.user_name}}'s active trade listings</h1>
+    {%for trade in user_trades%}
+    <p>{{ trade.item_name }}</p>
+    <p>{{ trade.item_type }}</p>
+    <p>{{ trade.size }}</p>
+    <p>{{ trade.desc }}</p>
+    {%endfor}
 </div>
 
 <div class = "container">
