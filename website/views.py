@@ -55,6 +55,9 @@ def get_trade(trade_id):
         flash("ERROR: Could not find trade with ID " + str(trade_id) + ", redirected back home.")
         return render_template("home.html", user=current_user)
     if request.method == 'POST':
+        if request.form.get("note_id"): #check if theres a note_id in submit to see if it was a delete note action
+            note_id = request.form.get("note_id")
+            return redirect(url_for('views.delete_note', note_id=note_id, trade_id=trade_id))
         note_data = request.form.get('msg')
         censored_data = profanity.censor(note_data) #checks to see if their is profanity in this sentence
         if len(censored_data) == 0:
@@ -109,6 +112,24 @@ def createtrade():
             return redirect(url_for('views.get_trade',trade_id=new_trade.trade_id))
     return render_template("create.html", user=current_user)
 
+@views.route('/editnote/<int:note_id>', methods=['GET', 'POST'])
+@login_required
+def edit_note(note_id):
+    note = Notes.query.get_or_404(note_id)
+    trade_id = note.trade_id
+    if note.user_name != current_user.user_name:
+        flash("ERROR: Cannot edit a note you didn't post")
+        return redirect(url_for('views.home',user = current_user))
+    if request.method == 'POST':
+        new_data = request.form.get('msg')
+        if len(new_data) < 10:
+            flash('Note must contain at least 10 characters')
+        else:
+            censored_data = profanity.censor(new_data)
+            note.note_data = new_data
+            db.session.commit()
+            return redirect(url_for('views.get_trade', trade_id=trade_id))
+    return render_template("edit_note.html", user=current_user)
 
 @views.route('/userpage', methods=['GET', 'POST'])
 @login_required
@@ -193,15 +214,12 @@ def update_note(note_id,trade_id):
 
 @views.route('/deletenote',methods=['GET', 'POST'])
 @login_required
-def delete_note():
-    note_id = request.form.get('note_id')
-    trade_id = request.form.get('trade_id')
+def delete_note(note_id, trade_id):
     note_to_delete = Notes.query.get_or_404(note_id)
     if note_to_delete.user_name == current_user.user_name:
         db.session.delete(note_to_delete)
         db.session.commit()
-        return redirect(url_for('views.get_trade', trade_id=trade_id))
-
+    return redirect(url_for('views.get_trade', trade_id=trade_id))
 
 
 def processimg():

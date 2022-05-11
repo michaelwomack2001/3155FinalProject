@@ -1,0 +1,14 @@
+{% extends 'layout.html'%}
+{%block body%} 
+<div class = "container">
+    <h1>Edit Note</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <label for="msg">Message</label>
+        <textarea name="msg" id="msg" class="form-control" title="Message"></textarea>
+        <br/>
+    <div align="center">
+        <button type="submit" class="btn btn-primary">Submit Note</button>
+    </div>
+</form>
+</div>
+{%endblock%}
