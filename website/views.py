@@ -22,19 +22,6 @@ views = Blueprint('views', __name__)
 def home():
     return render_template("home.html", user=current_user)
 
-@views.route('/delete-note', methods=['POST'])
-def delete_note():
-    note = json.loads(request.data)
-    noteId = note['noteId']
-    note = Notes.query.get(noteId)
-    db.session.commit()
-    if note:
-        if note.user_id == current_user.id:
-            db.session.delete(note)
-            db.session.commit()
-
-    return jsonify({})
-
 @views.route('/about')
 def about():
     return render_template("about.html", user=current_user)
@@ -166,6 +153,29 @@ def usersettings():
         return redirect(url_for('views.userpage',user =current_user))    
 
     return render_template("usersettings.html", user=current_user)
+
+@views.route('/updatenote',methods=['GET', 'POST'])
+@login_required
+def update_note(note_id,trade_id):
+    note_to_update = Notes.query.get_or_404(note_id)
+    if request.method == 'POST':
+        new_data = request.form.get('note_data')
+        if len(new_data) < 10:
+            flash('Note must contain at least 10 characters')
+        else:
+            censored_data = profanity.censor(censored_data)
+            note_to_update.note_data = new_data
+            db.session.commit()
+            return redirect(url_for('views.get_trade', trade_id=trade_id))
+
+@views.route('/deletenote',methods=['GET', 'POST'])
+@login_required
+def delete_note(note_id, trade_id):
+    note_to_delete = Notes.query.get_or_404(note_id)
+    db.session.delete(note_to_delete)
+    db.session.commit()
+    return redirect(url_for('views.get_trade', trade_id=trade_id))
+
 
 def processimg():
     return
