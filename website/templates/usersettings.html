@@ -1,103 +1,70 @@
-<!DOCTYPE html>
-<html lang = "en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-      crossorigin="anonymous"
+{% extends 'layout.html'%}
+{%block body%} 
+<script src="{{url_for('static', filename='settings.js')}}"></script>
+<div class = "container">
+    <h1>User Settings</h1>
+    <form method="POST" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="item_name">Name <a href="#" id="username"><i class="bi bi-pencil-square"></i></a></label>
+        <input
+        type="username"
+        class="form-control"
+        id="username"
+        name="username"
+        value="{{user.user_name}}"
+        disabled
+        />
+    </div>
+    <div class="form-group">
+      <label for="item_name">Email <a href="#" id="email"><i class="bi bi-pencil-square"></i></a></label>
+      <input
+      type="email"
+      class="form-control"
+      id="email"
+      name="email"
+      value="{{user.email}}"
+      disabled
+      />
+  </div>
+  <div class="form-group">
+    <label for="item_name">Password <a href="#" id="password"><i class="bi bi-pencil-square"></i></a></label>
+    <input
+    type="password"
+    class="form-control"
+    id="password"
+    name="password"
+    placeholder="********"
+    disabled
     />
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-      crossorigin="anonymous"
-    />
+</div>
+<div class="form-group">
+  <label for="item_name">Confirm Password</label>
+  <input
+  type="password"
+  class="form-control"
+  id="confirm_password"
+  name="confirm_password"
+  placeholder="********"
+  disabled
+  />
+</div>
+<div class="form-group">
+  <label for="item_name">Shipping Address <a href="#" id="address"><i class="bi bi-pencil-square"></i></a></label>
+  <input
+  type="address"
+  class="form-control"
+  id="address"
+  name="address"
+  value=""
+  disabled
+  />
+</div>
 
-    <title>{% block title %}Home{% endblock %}</title>
-  </head>
-    <body>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbar"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbar">
-          <div class="navbar-nav">
-            <a class="nav-item nav-link" id="home" href="/">Home</a>
-            <a class="nav-item nav-link" id="about" href="/about">About us</a>
-            <a class="nav-item nav-link" id="contact" href="/contact">Contact us</a>
-            {% if user.is_authenticated %}
-            <a class="nav-item nav-link" id="trade" href="/trade">Trade</a>
-            <a class="nav-item nav-link" id="userpage" href="/userpage">{{user.user_name}}</a>
-            <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
-            {% else %}
-            <a class="nav-item nav-link" id="login" href="/login">Login</a>
-            <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
-            {% endif %}
-          </div>
-        </div>
-      </nav>
-
-      {% with messages = get_flashed_messages(with_categories=true) %} {% if
-        messages %} {% for category, message in messages %} {% if category ==
-        'error' %}
-        <div class="alert alert-danger alter-dismissable fade show" role="alert">
-          {{ message }}
-          <button type="button" class="close" data-dismiss="alert">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        {% else %}
-        <div class="alert alert-success alter-dismissable fade show" role="alert">
-          {{ message }}
-          <button type="button" class="close" data-dismiss="alert">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        {% endif %} {% endfor %} {% endif %} {% endwith %}
-
-      <div class = "container">
-        <div class="sidebar">
-            <h1>Settings</h1>
-            <div>Account personalization</div>
-            <div>Register as a trader</div>
-            <div>Update information</div>
-            <div>Edit/Add to DISO</div>
-            <div>Edit/Add to ISO</div>
-            </div>
-            
-            <div class="body-text">
-            <!-- body content -->
-            {%block body %}
-            {% endblock %}
-            </div>
-            
-      </div>
-    <script
-      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-      crossorigin="anonymous"
-    ></script>
-
-    <script
-      type="text/javascript"
-      src="{{ url_for('static', filename='index.js') }}"
-    ></script>
-    </body>
-</html>
+        <br/>
+    <div align="center">
+        <button type="submit" id="confirm" class="btn btn-primary">Confirm Changes</button>
+        <a href="/delete"><button id="delete" class="btn btn-danger">Delete Account</button></a>
+    </div>
+</form>
+</div>
+{%endblock%}
