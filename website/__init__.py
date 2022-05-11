@@ -38,7 +38,9 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(user_name):
-        return Users.query.get(user_name)
+        user = Users.query.get(user_name)
+        db.session.commit()
+        return user
         
     return app
 

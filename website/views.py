@@ -45,6 +45,10 @@ def search():
 def contact():
     return render_template("contact.html", user=current_user)
 
+@views.route('/delete')
+def delete():
+    return render_template("delete.html", user=current_user)
+
 @views.route('/trade', methods=['GET', 'POST'])
 @login_required
 def trade():

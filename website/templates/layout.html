@@ -14,8 +14,9 @@
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       crossorigin="anonymous"/>
-
-
+    <!-- Bootstrap Font Icon CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>{% block title %}Home{% endblock %}</title>
   </head>
     <body>
@@ -58,7 +59,7 @@
                   <a class="navbar-brand" href="/userpage">Welcome back, {{user.user_name}}!</a>
                   <a class="nav-item nav-link active" id="trade" href="/trade">All Trades</a>
                   <a class="nav-item nav-link active" id="createtrade" href="/createtrade">Create Trade</a>
-                  <a class="nav-item nav-link active" id="userpage" href="/userpage">My Account</a>
+                  <a class="nav-item nav-link active" id="userpage" href="/usersettings">My Account</a>
                 </ul> 
                 <ul class="navbar-nav ml-auto">
                   <a class="nav-item nav-link active" id="logout" href="/logout">Logout</a>
