@@ -132,4 +132,6 @@ body{
     text-decoration: underline;
 }
 
-
+textarea {
+    resize: none;
+}
