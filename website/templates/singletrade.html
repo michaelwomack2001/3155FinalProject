@@ -4,17 +4,32 @@
 <ul class="list-group list-group-flush" id="trades">
   <div class = "container">
     <li class="list-group-item"></li>
+    <img src="{{url_for('static', filename='unavailable.png')}}" style="float:right; max-height:200px;"/>
     <h1>{{ trade.item_name }}</h1>
     <h2>Posted by: {{ trade.user_name }}</h1>
     <p>Category: {{ trade.item_type }}</p>
     <p>Condition: {{ trade.item_condition }}</p>
     <p>{{ trade.item_desc }}</p>
   </li>
-  </div>
+  </div><br>
+  <h2>Notes</h2>
+  {%if user.is_authenticated%}
+  <form method="POST">
+    <p style="font-style:italic;">Posting note as {{ user.user_name }}</p>
+    <table><tr>
+    <td><textarea id="msg" name="msg" cols="70" style="resize:none;"></textarea></td>
+    <td><button type="submit" id="confirm" class="btn btn-primary">Post</button></td>
+  </tr>
+  </table>
+  </form>
+  {%endif%}
+
   {%for note in trade_notes%}
   <div class = "container">
-    <h2>{note.user_name}</h2>
-    <p>{note.note_data}</p>
+    <h2>{{note.user_name}}</h2>
+    <p>{{note.note_data}}</p>
   </div>
   {%endfor%}
+
+
 {%endblock%}
