@@ -122,39 +122,53 @@ def userpage():
 @login_required
 def usersettings():
     if request.method == 'POST':
-
         user_to_update = Users.query.get_or_404(current_user.user_name)
         old_password = current_user.user_password
         old_email = current_user.email
-
+        # old_address = current_user.shipping_address
+        success = []
+        
         display_name = request.form.get('username') #idk if it is safe to update it
         new_email = request.form.get('email')
         new_password = request.form.get('password')
         conf_password = request.form.get('confirm_password')
-        shipping_address = request.form.get('address')
+        if new_password is not None:
+            new_hash = generate_password_hash(new_password,method='sha256')
+        # shipping_address = request.form.get('address')
         
-        if new_password != old_password:
-            if len(new_password) < 7:
-                if new_password == conf_password:
-                    user_password=generate_password_hash(new_password, method='sha256')
-                    user_to_update.user_password = user_password
-                else:
-                    flash('Passwords must match')
-
-        if new_email == 'None':
-            user_to_update.email = old_email
-        else:
-            
-            user_to_update.email = new_email
-
-        user_to_update.shipping_address = shipping_address
-
+        if new_password != conf_password and new_password != '':
+            flash('Passwords do not match! Please enter same password twice to change password.')
+        elif new_password is not None and new_password != '':
+            if new_hash != old_password and new_password == conf_password:
+                new_password = generate_password_hash(new_password,method='sha256')
+                user_to_update.user_password = new_password
+                success.append("password")
+                # if len(new_password) < 7:
+                #     if new_password == conf_password:
+                #         user_password=generate_password_hash(new_password, method='sha256')
+                #         user_to_update.user_password = user_password
+                #     else:
+                #         flash('Passwords must match')
+        if new_email is not None:
+            if new_email != old_email:
+                user_to_update.email = new_email
+                success.append("email")
+        # if shipping_address is not None:
+        #     print("SHIPPING ADDRESS:" + str(shipping_address))
+        #     print("OLD ADDRESS:" + str(old_address))
+        #     if shipping_address != old_address:
+        #         user_to_update.shipping_address = shipping_address
         db.session.commit()
-        return redirect(url_for('views.userpage',user =current_user))    
+        if len(success) > 0:
+            msg = success[0]
+            if len(success) > 1:
+                msg += " and " + success[1]
+            flash(f"Successfully changed {msg}!")
+        # return redirect(url_for('views.userpage',user=current_user))    
 
     return render_template("usersettings.html", user=current_user)
 
-@views.route('/updatenote',methods=['GET', 'POST'])
+@views.route('/deleteuser',methods=['GET', 'POST'])
 @login_required
 def delete_user():
     user_to_delete = Users.query.get_or_404(current_user.user_name)
@@ -179,12 +193,15 @@ def update_note(note_id,trade_id):
 
 @views.route('/deletenote',methods=['GET', 'POST'])
 @login_required
-def delete_note(note_id, trade_id):
+def delete_note():
+    note_id = request.form.get('note_id')
+    trade_id = request.form.get('trade_id')
     note_to_delete = Notes.query.get_or_404(note_id)
     if note_to_delete.user_name == current_user.user_name:
         db.session.delete(note_to_delete)
         db.session.commit()
         return redirect(url_for('views.get_trade', trade_id=trade_id))
+
 
 
 def processimg():
