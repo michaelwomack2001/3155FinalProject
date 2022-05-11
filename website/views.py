@@ -1,4 +1,5 @@
 from asyncio.windows_events import NULL
+from hashlib import new
 from re import T
 from flask import Blueprint, render_template, request, flash, redirect, url_for,jsonify
 from flask_login import login_required, current_user
@@ -133,6 +134,37 @@ def userpage():
 @views.route('/usersettings',methods=['GET', 'POST'])
 @login_required
 def usersettings():
+    if request.method == 'POST':
+
+        user_to_update = Users.query.get_or_404(current_user.user_name)
+        old_password = current_user.user_password
+        old_email = current_user.email
+
+        display_name = request.form.get('username') #idk if it is safe to update it
+        new_email = request.form.get('email')
+        new_password = request.form.get('password')
+        conf_password = request.form.get('confirm_password')
+        shipping_address = request.form.get('address')
+        
+        if new_password != old_password:
+            if len(new_password) < 7:
+                if new_password == conf_password:
+                    user_password=generate_password_hash(new_password, method='sha256')
+                    user_to_update.user_password = user_password
+                else:
+                    flash('Passwords must match')
+
+        if new_email == 'None':
+            user_to_update.email = old_email
+        else:
+            
+            user_to_update.email = new_email
+
+        user_to_update.shipping_address = shipping_address
+
+        db.session.commit()
+        return redirect(url_for('views.userpage',user =current_user))    
+
     return render_template("usersettings.html", user=current_user)
 
 def processimg():

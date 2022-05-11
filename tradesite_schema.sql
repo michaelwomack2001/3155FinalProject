@@ -48,6 +48,3 @@ FOREIGN KEY (trade_id) REFERENCES trades (trade_id)
 );
 
 Select * from users;
-
-INSERT INTO users(user_name, email, user_password, reputation)
-VALUES("MiiiKe", "test@gmail.com", "password", 100);
