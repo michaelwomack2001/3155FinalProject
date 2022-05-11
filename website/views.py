@@ -12,6 +12,7 @@ from src.models import Trades
 from src.models import db
 import os
 import json
+from better_profanity import profanity
 
 views = Blueprint('views', __name__)
 
@@ -59,11 +60,26 @@ def trade():
 @views.route('/trade/<int:trade_id>')
 def get_trade(trade_id):
     trade = Trades.query.get(trade_id)
+    #all_notes = Notes.query.get(trade_id).all()
     db.session.commit()
     if not trade:
         # TODO: Code for if the trade ID cannot be found. Currently just sends user back to homepage
         flash("ERROR: Could not find trade with ID " + str(trade_id) + ", redirected back home.")
         return render_template("home.html", user=current_user)
+    if request.method == 'POST':
+        note_data = request.form.get('text')
+        censored_data = profanity.censor(note_data) #checks to see if their is profanity in this sentence
+        if len(censored_data) == 0:
+            flash('In order to post a note you must ')
+        elif len(censored_data) < 10:
+            flash('Note is too short, must be 10 characters')
+        else:
+            new_note = Notes(note_data = censored_data, user_name = current_user.user_name,
+            trade_id = trade_id)
+            db.session.add(new_note)
+            db.session.commit()
+            return redirect(url_for('views.get_trade', trade_id))
+
     return render_template("singletrade.html", user=current_user, trade = trade)
 
 @views.route('/createtrade', methods=['GET', 'POST'])

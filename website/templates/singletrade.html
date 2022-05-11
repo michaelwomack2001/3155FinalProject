@@ -11,5 +11,10 @@
     <p>{{ trade.item_desc }}</p>
   </li>
   </div>
-
+  {%for note in trade_notes%}
+  <div class = "container">
+    <h2>{note.user_name}</h2>
+    <p>{note.note_data}</p>
+  </div>
+  {%endfor%}
 {%endblock%}
