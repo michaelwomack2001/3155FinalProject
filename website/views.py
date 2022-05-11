@@ -2,7 +2,7 @@ from asyncio.windows_events import NULL
 from hashlib import new
 from re import T
 from flask import Blueprint, render_template, request, flash, redirect, url_for,jsonify
-from flask_login import login_required, current_user
+from flask_login import login_required, current_user,logout_user
 from sqlalchemy import false, true, text
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
@@ -156,6 +156,15 @@ def usersettings():
 
 @views.route('/updatenote',methods=['GET', 'POST'])
 @login_required
+def delete_user():
+    user_to_delete = Users.query.get_or_404(current_user.user_name)
+    db.session.delete(user_to_delete)
+    db.session.commit()
+    logout_user()
+    return redirect(url_for('views.home'))
+
+@views.route('/updatenote',methods=['GET', 'POST'])
+@login_required
 def update_note(note_id,trade_id):
     note_to_update = Notes.query.get_or_404(note_id)
     if request.method == 'POST':
@@ -172,9 +181,10 @@ def update_note(note_id,trade_id):
 @login_required
 def delete_note(note_id, trade_id):
     note_to_delete = Notes.query.get_or_404(note_id)
-    db.session.delete(note_to_delete)
-    db.session.commit()
-    return redirect(url_for('views.get_trade', trade_id=trade_id))
+    if note_to_delete.user_name == current_user.user_name:
+        db.session.delete(note_to_delete)
+        db.session.commit()
+        return redirect(url_for('views.get_trade', trade_id=trade_id))
 
 
 def processimg():
