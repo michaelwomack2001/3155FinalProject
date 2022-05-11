@@ -20,7 +20,7 @@ views = Blueprint('views', __name__)
 
 @views.route('/')
 def home():
-    return render_template("home.html", user=current_user)
+    return redirect(url_for('views.trade', user=current_user))
 
 @views.route('/about')
 def about():
@@ -39,13 +39,13 @@ def delete():
     return render_template("delete.html", user=current_user)
 
 @views.route('/trade', methods=['GET', 'POST'])
-@login_required
 def trade():
     all_trades = Trades.query.all()
     db.session.commit()
     return render_template("trade.html", user=current_user, all_trades = all_trades)
 
 @views.route('/trade/<int:trade_id>', methods=['POST','GET'])
+@login_required
 def get_trade(trade_id):
     trade = Trades.query.get(trade_id)
     all_notes = Notes.query.filter_by(trade_id=trade_id).all()
